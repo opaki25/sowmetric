@@ -1,0 +1,5 @@
+# Future device protocol (design only)
+Transport: newline-delimited JSON over USB serial. Commands require unique id, command, payload and protocolVersion. Replies echo id with acknowledged, state, timestamp, and error. Device telemetry includes weightKg, containerPresent, seedLevel, calibrationValid, gateClosed, estop and sequence.
+Commands: GET_STATUS, READ_WEIGHT, TARE, START_DISPENSING, PAUSE_DISPENSING, RESUME_DISPENSING, STOP_DISPENSING, GET_SENSOR_DATA, GET_ERROR_STATUS.
+A common adapter should expose connect(), status(), command(), subscribe(), disconnect(). Simulator and physical adapter must implement identical interfaces. No adapter claims to exist yet.
+Controller must enforce capacity, maximum run time, independent physical emergency stop, closed gate on invalid readings or communication loss, watchdog and command deduplication. START must require operator authorization, known seed lot, validated calibration, empty container, adequate stock and safe target. Host timeouts must never trigger automatic repeated START commands.

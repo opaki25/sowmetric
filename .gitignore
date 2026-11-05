@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.sqlite
+.env
+node_modules.incomplete.*/
+package-lock.incomplete.json

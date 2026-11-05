@@ -1,0 +1,17 @@
+PRAGMA foreign_keys=ON;
+CREATE TABLE IF NOT EXISTS schema_migrations(version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, role TEXT NOT NULL CHECK(role IN ('administrator','operator')), created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS machines(id TEXT PRIMARY KEY, name TEXT NOT NULL, controller TEXT NOT NULL, capacity_kg REAL NOT NULL CHECK(capacity_kg>0), safe_batch_kg REAL NOT NULL CHECK(safe_batch_kg>0 AND safe_batch_kg<capacity_kg));
+CREATE TABLE IF NOT EXISTS crops(id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE, guide TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS varieties(id TEXT PRIMARY KEY, crop_id TEXT NOT NULL REFERENCES crops(id), name TEXT NOT NULL, recommendation_json TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS seed_lots(id TEXT PRIMARY KEY, variety_id TEXT NOT NULL REFERENCES varieties(id), germination REAL NOT NULL CHECK(germination>0 AND germination<=100), tsw_g REAL NOT NULL CHECK(tsw_g>0), stock_kg REAL NOT NULL CHECK(stock_kg>=0), low_stock_kg REAL NOT NULL DEFAULT 10 CHECK(low_stock_kg>=0));
+CREATE TABLE IF NOT EXISTS dispensing_sessions(id TEXT PRIMARY KEY, lot_id TEXT REFERENCES seed_lots(id), mode TEXT NOT NULL CHECK(mode IN ('simulation','hardware')), status TEXT NOT NULL, target_kg REAL NOT NULL CHECK(target_kg>0), actual_kg REAL NOT NULL DEFAULT 0 CHECK(actual_kg>=0), created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS dispensing_batches(id TEXT PRIMARY KEY, session_id TEXT NOT NULL REFERENCES dispensing_sessions(id), batch_number INTEGER NOT NULL CHECK(batch_number>0), target_kg REAL NOT NULL CHECK(target_kg>0), actual_kg REAL NOT NULL CHECK(actual_kg>=0), UNIQUE(session_id,batch_number));
+CREATE TABLE IF NOT EXISTS dispensing_measurements(id INTEGER PRIMARY KEY, batch_id TEXT NOT NULL REFERENCES dispensing_batches(id), weight_kg REAL NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS inventory_movements(id TEXT PRIMARY KEY, lot_id TEXT NOT NULL REFERENCES seed_lots(id), session_id TEXT UNIQUE REFERENCES dispensing_sessions(id), quantity_kg REAL NOT NULL, reason TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS calibrations(id TEXT PRIMARY KEY, machine_id TEXT NOT NULL REFERENCES machines(id), lot_id TEXT REFERENCES seed_lots(id), parameters_json TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS machine_events(id TEXT PRIMARY KEY, machine_id TEXT NOT NULL REFERENCES machines(id), event TEXT NOT NULL, details_json TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value_json TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS sessions_date ON dispensing_sessions(created_at);
+CREATE INDEX IF NOT EXISTS movements_lot ON inventory_movements(lot_id,created_at);
+INSERT OR IGNORE INTO schema_migrations(version) VALUES(1);
