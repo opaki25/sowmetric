@@ -40,3 +40,6 @@ The server now applies `db/migrations/001_initial.sql` and seeds crops, varietie
 Seed inventory editing and server transaction loading replace the earlier read-only inventory limitation. Other limitations above remain unless explicitly superseded here.
 
 The calculation screen now includes optional harvest scenarios with editable yield/ha, survival and bag mass. These are unvalidated demonstration assumptions. Calculator input bounds reject zero-hole fields and excessive batch allocations. The automated suite now contains 17 passing tests.
+
+## 3D dispensing console
+The machine is now constructed from CSS 3D surfaces, with a rotation slider and cabinet inspection view. The hopper, metering wheel, chute, animated seeds, tray and weighing display respond to simulation state. The redesigned console shows bulk/fine feed stages, percentage progress and settling guidance. Flow uses a bounded, mildly varying coarse rate and switches to a lower fine rate near target; the model is illustrative, not calibrated to physical equipment. Reduced-motion preferences disable continuous animation. Twenty automated tests pass, including flow switching, completion and bounded time steps. Production build verified; visual browser QA was blocked by a preview-tool timeout.

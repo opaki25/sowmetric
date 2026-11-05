@@ -1,0 +1,1 @@
+export function advanceFeed(current,target,dt,clock=0){if(![current,target,dt,clock].every(Number.isFinite)||current<0||target<=0||dt<=0)throw Error('Invalid feed input');const remaining=Math.max(0,target-current),fine=remaining<=Math.min(.35,target*.2);const rate=(fine?.042:.32)*(1+.065*Math.sin(clock*7));return {weight:Math.min(target,current+rate*Math.min(dt,.25)),fine,rate};}
