@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {bill} from '../shared/billing.mjs';import {openDatabase} from '../db/database.mjs';
+test('round bill to nearest hundred',()=>{assert.equal(bill(1.582,1000).amountDue,1600);assert.equal(bill(1.185,1000).amountDue,1200);assert.equal(bill(1.14,1000).amountDue,1100);assert.equal(bill(1.15,1000).amountDue,1200)});
+test('bill actual cumulative weight including partial delivery',()=>{assert.equal(bill(51.582,1000).amountDue,51600);assert.equal(bill(0,1000).amountDue,0);assert.throws(()=>bill(-1,1000));assert.throws(()=>bill(1,NaN))});
+test('pricing migration is idempotent and defaults to unset',()=>{const db=openDatabase(':memory:');assert.equal(db.prepare('SELECT price_per_kg FROM seed_lots LIMIT 1').get().price_per_kg,0);assert.ok(db.prepare('SELECT version FROM schema_migrations WHERE version=2').get());db.close()});
