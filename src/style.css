@@ -50,3 +50,19 @@
 @media(max-width:360px){.consoleBrand{left:58%;}.consoleBrand img{width:145px}.screenSetup .fields{grid-template-columns:minmax(0,1fr)}.consoleViewport .twinControls{gap:6px;padding-left:10px;padding-right:10px}}
 .billingCard{background:#075c38;color:white;border-radius:12px;padding:10px 14px;flex-shrink:0}.billingCard>div{display:flex;justify-content:space-between;align-items:center;gap:10px}.billingCard span{font-size:11px}.billingCard strong{font-size:22px;font-variant-numeric:tabular-nums}.billingCard small{font-size:9px;color:#c0ddc8;display:block;margin-top:4px}@media(max-height:700px){.billingCard{padding:7px 12px}.billingCard strong{font-size:19px}.consoleViewport .weighingConsole .machineMetrics>div{padding:6px}.fullWidthWorkspace.consoleViewport .dispensingLayout>.weighingConsole{overflow-y:auto}} 
 .touchPanel .machineBill{font-size:8px;color:#e4d890;letter-spacing:.5px;margin:3px 0}
+.printReceipt{display:none}.receiptDetails{margin:16px 0 24px}
+@media print{
+ @page{size:A4;margin:12mm}
+ body.printingReceipt{background:#fff!important;color:#14271c!important}
+ body.printingReceipt #root>*{display:none!important}
+ body.printingReceipt #root>.printReceipt{display:block!important;font:10pt/1.35 Arial,sans-serif;width:100%;color:#14271c}
+ .printReceipt .receiptHeader{display:flex!important;justify-content:space-between;align-items:center;border-bottom:2px solid #075c38;padding:0 0 10px;background:white}
+ .receiptHeader img{width:48mm;height:auto}.receiptHeader h1{font-size:17pt;letter-spacing:0;margin:0}.receiptHeader p{margin:4px 0;font-size:8pt;color:#075c38}
+ .printReceipt h2{font-size:10pt;color:#075c38;border-bottom:1px solid #cfdbd1;margin:13px 0 6px;padding-bottom:4px;break-after:avoid}
+ .receiptMeta,.receiptGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px 20px;break-inside:avoid}.receiptMeta{margin-top:12px}
+ .receiptRow{display:flex;justify-content:space-between;gap:8px;padding:3px 0;font-size:9pt;border-bottom:1px dotted #e0e6e1;overflow-wrap:anywhere}.receiptRow span{color:#536359}.receiptRow b{text-align:right;font-weight:600;max-width:65%}
+ .receiptTotal{display:flex;align-items:center;justify-content:space-between;border:1px solid #075c38;padding:10px;margin-top:10px;break-inside:avoid}.receiptTotal strong{font-size:18pt}.receiptTotal span{font-size:9pt}
+ .printReceipt .receiptInstructions{font-size:9pt;line-height:1.4;color:#263c2e;margin:6px 0;overflow-wrap:anywhere}
+ .receiptSignatures{display:flex;justify-content:space-between;gap:20px;margin-top:20px;line-height:2;font-size:9pt;break-inside:avoid}
+ .printReceipt .receiptFooter{display:block!important;font-size:8pt;color:#526257;border-top:1px solid #cbd7cd;margin-top:12px;padding-top:8px}
+}
