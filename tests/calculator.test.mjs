@@ -2,3 +2,5 @@ import test from 'node:test';import assert from 'node:assert/strict';import {cal
 test('reject impractically large batch allocation',()=>assert.throws(()=>batches(1e12)));
 test('reject field with no complete planting hole',()=>assert.throws(()=>calculate({...x,land:0.000001,unit:'m²'})));
 test('seeds per hole accepts ten and rejects fractions',()=>{assert.equal(calculate({...x,seeds:10}).base,359720);assert.throws(()=>calculate({...x,seeds:10.01}));assert.throws(()=>calculate({...x,seeds:0}));});
+import {simulationBatches} from '../shared/calculator.mjs';
+test('bulk demo supports tonne allocations while physical scale stays limited',()=>{assert.deepEqual(simulationBatches(125,50),[50,50,25]);assert.equal(simulationBatches(10000,500).length,20);assert.throws(()=>batches(100,50));assert.throws(()=>simulationBatches(100001,500))});
